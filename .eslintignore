@@ -1,0 +1,5 @@
+cypress/
+mocks/
+tests/
+coverage/
+cypress.config.js

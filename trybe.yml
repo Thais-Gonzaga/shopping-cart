@@ -1,0 +1,7 @@
+ignore_files:
+  - cypress/
+  - mocks/
+  - .eslintignore
+  - .eslintrc.json
+  - .stylelintrc.json
+  - cypress.config.js
