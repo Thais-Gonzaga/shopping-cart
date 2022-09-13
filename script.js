@@ -2,6 +2,10 @@
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
 
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
+const [items] = document.getElementsByClassName('items');
+const [cartItems] = document.getElementsByClassName('cart__items');
+const idItem = document.getElementsByClassName('item_id');
+const itemAdd = document.getElementsByClassName('item__add');
 
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
@@ -40,12 +44,10 @@ const createCustomElement = (element, className, innerText) => {
 const createProductItemElement = ({ id, title, thumbnail }) => {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item_id', id));
   section.appendChild(createCustomElement('span', 'item__title', title));
   section.appendChild(createProductImageElement(thumbnail));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
   return section;
 };
 
@@ -54,7 +56,7 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  * @param {Element} product - Elemento do produto.
  * @returns {string} ID do produto.
  */
-const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
+// const getIdFromProductItem = (product) => product.querySelector('span.item_id').innerText;
 
 /**
  * Função responsável por criar e retornar um item do carrinho.
@@ -68,8 +70,23 @@ const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
+  // li.addEventListener('click', cartItemClickListener);
   return li;
 };
 
-window.onload = () => { };
+const createList = async (products) => {
+  const array = await fetchProducts(products);
+  array.forEach((item) => items.appendChild(createProductItemElement(item)));
+};
+
+const date = async (id) => {
+  const result = await fetchItem(id);
+  cartItems.appendChild(createCartItemElement(result));
+};
+
+window.onload = async () => {
+  await createList('computador');
+  [...itemAdd].forEach((btn, index) => {
+    btn.addEventListener('click', () => date(idItem[index].innerText));
+  });
+};
