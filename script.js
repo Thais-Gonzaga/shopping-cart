@@ -6,6 +6,7 @@ const [items] = document.getElementsByClassName('items');
 const [cartItems] = document.getElementsByClassName('cart__items');
 const idItem = document.getElementsByClassName('item_id');
 const itemAdd = document.getElementsByClassName('item__add');
+// const cartItem = document.getElementsByClassName('cart__item');
 
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
@@ -66,11 +67,16 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  * @param {string} product.price - Preço do produto.
  * @returns {Element} Elemento de um item do carrinho.
  */
+
+ const cartItemClickListener = (e) => {
+  const click = e.target;
+  cartItems.removeChild(click);
+};
 const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  // li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', cartItemClickListener);
   return li;
 };
 
