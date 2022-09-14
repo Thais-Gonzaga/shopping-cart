@@ -14,11 +14,4 @@ describe('3 - Teste a função saveCartItems', () => {
     saveCartItems(cartItem)
     expect(localStorage.setItem).toHaveBeenCalledWith('cartItem',cartItem)
   });
-   
-  // it('1.1 Verifique se ', () => {
-  //   saveCartItems('MLB1341706310')
-  //   expect(localStorage.setItem).toHaveBeenCalled()
-  // });
-   
-   
 });
