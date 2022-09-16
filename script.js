@@ -5,6 +5,8 @@
 const [items] = document.getElementsByClassName('items');
 const [cartItems] = document.getElementsByClassName('cart__items');
 const idItem = document.getElementsByClassName('item_id');
+// const titleItem = document.getElementsByClassName('item__title');
+// const imageItem = document.getElementsByClassName('item__image');
 const itemAdd = document.getElementsByClassName('item__add');
 // const cartItem = document.getElementsByClassName('cart__item');
 
@@ -67,11 +69,21 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  * @param {string} product.price - Preço do produto.
  * @returns {Element} Elemento de um item do carrinho.
  */
-
- const cartItemClickListener = (e) => {
-  const click = e.target;
-  cartItems.removeChild(click);
+ const removeLocalStorege = (key) => {
+  const oldList = getSavedCartItems();
+  const newList = oldList.filter(({ key: saveKey }) => saveKey !== key);
+  saveCartItems(newList);  
+  console.log(newList);
+ };
+ // console.log((element.innerText.split('|')[0]).split(' ')[1]);
+ // console.log((element.innerText.replace());
+ 
+ const cartItemClickListener = (event) => {
+  const element = event.target;
+  cartItems.removeChild(element);
+  removeLocalStorege(element.id);
 };
+
 const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -86,13 +98,28 @@ const createList = async (products) => {
 };
 
 const date = async (id) => {
-  const result = await fetchItem(id);
-  cartItems.appendChild(createCartItemElement(result));
+  const { title, price } = await fetchItem(id);
+  const atual = getSavedCartItems();
+  const key = `${Math.random()}`.replace('.', '');
+  atual.push({ id, title, price, key });
+  saveCartItems(atual);
+  const element = createCartItemElement({ id, title, price });
+  element.id = key;
+  cartItems.appendChild(element);
 };
 
 window.onload = async () => {
   await createList('computador');
   [...itemAdd].forEach((btn, index) => {
-    btn.addEventListener('click', () => date(idItem[index].innerText));
+    btn.addEventListener('click', () => { 
+      const id = idItem[index].innerText;
+      date(id); 
+    });
+  });
+  const saveList = getSavedCartItems();
+  saveList.forEach(({ id, title, price, key }) => {
+    const element = createCartItemElement({ id, title, price });
+    element.id = key;
+    cartItems.appendChild(element);
   });
 };
