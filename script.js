@@ -7,7 +7,9 @@ const [cartItems] = document.getElementsByClassName('cart__items');
 const idItem = document.getElementsByClassName('item_id');
 const itemAdd = document.getElementsByClassName('item__add');
 const cart = document.getElementsByClassName('cart')[0];
-console.log(cart);
+const [emptyCart] = document.getElementsByClassName('empty-cart');
+const cartItem = document.getElementsByClassName('cart__item');
+console.log(cartItem);
 
 const elementPrice = document.createElement('p');
 elementPrice.className = 'total-price';
@@ -73,7 +75,16 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  * @returns {Element} Elemento de um item do carrinho.
  */
 
- let priceProduct = 0;
+let priceProduct = 0;
+ emptyCart.addEventListener('click', () => {
+  localStorage.clear();
+  [...cartItem].forEach((li) => {
+  cartItems.removeChild(li);
+  priceProduct = 0;
+  elementPrice.innerText = `Total: ${priceProduct}`;
+  });
+ }); 
+
  const creteTotalSoma = (price) => {
    priceProduct += price;
    elementPrice.innerText = `Total: ${priceProduct}`;
