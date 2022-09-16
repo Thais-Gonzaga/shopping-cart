@@ -5,10 +5,13 @@
 const [items] = document.getElementsByClassName('items');
 const [cartItems] = document.getElementsByClassName('cart__items');
 const idItem = document.getElementsByClassName('item_id');
-// const titleItem = document.getElementsByClassName('item__title');
-// const imageItem = document.getElementsByClassName('item__image');
 const itemAdd = document.getElementsByClassName('item__add');
-// const cartItem = document.getElementsByClassName('cart__item');
+const cart = document.getElementsByClassName('cart')[0];
+console.log(cart);
+
+const elementPrice = document.createElement('p');
+elementPrice.className = 'total-price';
+cart.appendChild(elementPrice); 
 
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
@@ -69,19 +72,32 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  * @param {string} product.price - Preço do produto.
  * @returns {Element} Elemento de um item do carrinho.
  */
+
+ let priceProduct = 0;
+ const creteTotalSoma = (price) => {
+   priceProduct += price;
+   elementPrice.innerText = `Total: ${priceProduct}`;
+ };
+ 
+ const createTotalSub = (price) => {
+  priceProduct -= +price;
+  elementPrice.innerText = `Total: ${priceProduct}`;
+};
+
  const removeLocalStorege = (key) => {
   const oldList = getSavedCartItems();
   const newList = oldList.filter(({ key: saveKey }) => saveKey !== key);
   saveCartItems(newList);  
-  console.log(newList);
  };
  // console.log((element.innerText.split('|')[0]).split(' ')[1]);
  // console.log((element.innerText.replace());
  
  const cartItemClickListener = (event) => {
   const element = event.target;
+  const priceRemove = (element.innerText.split('|')[2]).split('$')[1];
   cartItems.removeChild(element);
   removeLocalStorege(element.id);
+  createTotalSub(priceRemove);
 };
 
 const createCartItemElement = ({ id, title, price }) => {
@@ -106,6 +122,7 @@ const date = async (id) => {
   const element = createCartItemElement({ id, title, price });
   element.id = key;
   cartItems.appendChild(element);
+  creteTotalSoma(price);
 };
 
 window.onload = async () => {
@@ -113,13 +130,14 @@ window.onload = async () => {
   [...itemAdd].forEach((btn, index) => {
     btn.addEventListener('click', () => { 
       const id = idItem[index].innerText;
-      date(id); 
+      date(id);
     });
   });
   const saveList = getSavedCartItems();
   saveList.forEach(({ id, title, price, key }) => {
     const element = createCartItemElement({ id, title, price });
     element.id = key;
+    creteTotalSoma(price);
     cartItems.appendChild(element);
   });
 };
