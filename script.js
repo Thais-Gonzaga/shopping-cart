@@ -9,7 +9,6 @@ const itemAdd = document.getElementsByClassName('item__add');
 const cart = document.getElementsByClassName('cart')[0];
 const [emptyCart] = document.getElementsByClassName('empty-cart');
 const cartItem = document.getElementsByClassName('cart__item');
-console.log(cartItem);
 
 const elementPrice = document.createElement('p');
 elementPrice.className = 'total-price';
@@ -123,6 +122,8 @@ const createList = async (products) => {
   const array = await fetchProducts(products);
   array.forEach((item) => items.appendChild(createProductItemElement(item)));
 };
+const loading = createCustomElement('p', 'loading', '...loading');
+document.body.appendChild(loading);
 
 const date = async (id) => {
   const { title, price } = await fetchItem(id);
@@ -136,8 +137,13 @@ const date = async (id) => {
   creteTotalSoma(price);
 };
 
+const removeLoading = () => {
+  loading.remove();
+};
+
 window.onload = async () => {
   await createList('computador');
+  removeLoading();
   [...itemAdd].forEach((btn, index) => {
     btn.addEventListener('click', () => { 
       const id = idItem[index].innerText;
